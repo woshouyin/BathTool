@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.fred</groupId>
+    <artifactId>tool</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.9.RELEASE</version>
+    </parent>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
+        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <spring-cloud-alibaba.version>2.2.5.RELEASE</spring-cloud-alibaba.version>
+        <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
+        <spring-boot.mybatis>2.1.3</spring-boot.mybatis>
+        <spring-boot.redisdata>2.3.9.RELEASE</spring-boot.redisdata>
+        <swagger.fox.version>2.9.2</swagger.fox.version>
+        <swagger.core.version>1.5.24</swagger.core.version>
+        <tobato.version>1.26.5</tobato.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
+        <pagehelper.boot.version>1.3.0</pagehelper.boot.version>
+        <druid.version>1.2.4</druid.version>
+        <dynamic-ds.version>3.2.1</dynamic-ds.version>
+        <commons.io.version>2.5</commons.io.version>
+        <commons.fileupload.version>1.3.3</commons.fileupload.version>
+        <velocity.version>1.7</velocity.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <minio.version>8.0.3</minio.version>
+        <poi.version>4.1.2</poi.version>
+        <easyexcel.version>2.2.6</easyexcel.version>
+        <common-pool.version>2.6.2</common-pool.version>
+        <lombok.version>1.18.12</lombok.version>
+        <hutool.version>5.7.2</hutool.version>
+        <mybatis-plus.version>3.4.0</mybatis-plus.version>
+        <wechat-pay.version>0.2.1</wechat-pay.version>
+        <ali-pay.version>4.10.159.ALL</ali-pay.version>
+        <guava.version>29.0-jre</guava.version>
+        <fastmybatis.version>1.9.1</fastmybatis.version>
+        <commons-collection.version>3.2.2</commons-collection.version>
+        <commons-lang3.version>3.8.1</commons-lang3.version>
+        <commons-codec.version>1.11</commons-codec.version>
+        <commons-logging.version>1.2</commons-logging.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
+        <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
+        <swagger.version>1.5.21</swagger.version>
+        <springfox-spring-web.version>2.9.2</springfox-spring-web.version>
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+        <easyopen.version>1.16.9</easyopen.version>
+        <asm.version>6.2</asm.version>
+        <pagehelper.version>5.2.0</pagehelper.version>
+        <redisson.version>3.16.3</redisson.version>
+        <huawei-obs.version>3.21.8</huawei-obs.version>
+        <com.google.zxing.core>3.3.3</com.google.zxing.core>
+        <jasypt.version>3.0.3</jasypt.version>
+
+        <!--以下主要是xxl-job 2.3.0使用-->
+        <netty-all.version>4.1.58.Final</netty-all.version>
+        <gson.version>2.8.6</gson.version>
+        <spring.version>5.3.3</spring.version>
+        <slf4j-api.version>1.7.30</slf4j-api.version>
+        <junit.version>5.7.1</junit.version>
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+        <groovy.version>3.0.7</groovy.version>
+
+        <!--docker镜像构建使用-->
+        <dockerfile.username>qqqq112233dnf</dockerfile.username>
+        <dockerfile.password>Tzszntc12#$</dockerfile.password>
+        <dockerfile.plugin.version>1.4.13</dockerfile.plugin.version>
+        <dockerfile.repository.registry>tz-park-cr-registry.cn-hangzhou.cr.aliyuncs.com</dockerfile.repository.registry>
+        <dockerfile.repository.namespace>tzszntc</dockerfile.repository.namespace>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+<!--            <version>4.9.3</version>-->
+        </dependency>
+
+        <!-- SpringBoot 依赖配置 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring-boot.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Mybatis 依赖配置 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${spring-boot.mybatis}</version>
+        </dependency>
+
+        <!-- mybatis-plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.75</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+<!--            <version>8.0.23</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+<!--            <version>5.3.23</version>-->
+        </dependency>
+<!--        中文分词库-->
+        <dependency>
+            <groupId>com.hankcs</groupId>
+            <artifactId>hanlp</artifactId>
+            <version>portable-1.7.8</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+
+</project>

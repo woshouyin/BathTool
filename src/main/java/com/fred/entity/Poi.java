@@ -24,12 +24,12 @@ public class Poi {
     private String marketCenter;//
 
 
-    public double getLat(){
+    public double getLon(){
         String[] split = location.split(",");
         return Double.parseDouble(split[0]);
     }
 
-    public double getLon(){
+    public double getLat(){
         String[] split = location.split(",");
         return Double.parseDouble(split[1]);
     }

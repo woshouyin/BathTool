@@ -35,8 +35,8 @@ public class PointAggUtil {
                     for (Poi p : poisInCluster) {
                         sumLon += p.getLon();
                         sumLat += p.getLat();
-                        centerLon = ((sumLon / poisInCluster.size()) + "000").substring(0, 9);
-                        centerLat = ((sumLat / poisInCluster.size()) +"000").substring(0,9);
+                        centerLon = ((sumLon / poisInCluster.size()) + "000000000").substring(0, 9);
+                        centerLat = ((sumLat / poisInCluster.size()) + "000000000").substring(0, 9);
                         centerLatLon = ""+centerLon+ "," +centerLat;
                     }
                 } else {
@@ -51,8 +51,8 @@ public class PointAggUtil {
                 sumLat += p.getLat();
                 sumLon += p.getLon();
             }
-            centerLon = ((sumLon / poisInCluster.size()) + "000").substring(0, 9);
-            centerLat = ((sumLat / poisInCluster.size()) +"000").substring(0,9);
+            centerLon = ((sumLon / poisInCluster.size()) + "000000000").substring(0, 9);
+            centerLat = ((sumLat / poisInCluster.size()) +"000000000").substring(0,9);
             centerLatLon = ""+centerLon+ "," +centerLat;
             Cluster cluster = new Cluster();
             cluster.setCenter(centerLatLon);

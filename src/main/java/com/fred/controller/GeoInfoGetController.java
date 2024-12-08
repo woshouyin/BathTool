@@ -82,7 +82,6 @@ public class GeoInfoGetController {
     @PostMapping("/pointAggAdCodeL3")
     public void pointAggAdCodeL3(@RequestParam("adCode") String L3AdCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount, HttpServletResponse response) throws IOException {
         //通过L3级Ad 获取到对应的所有L4级AD
-//        List<String> l4Codes = adService.getL4CodeByL3(L3AdCode);
         List<Ad> l4Ads = adService.getL4AdByL3(L3AdCode);
         //每个L4级别的AD，都查询到对应的cluster
         HashMap<String, List<Cluster>> L4ClustersMap = new HashMap<>();
@@ -100,16 +99,29 @@ public class GeoInfoGetController {
         excelWriter.finish();
     }
 
+    @PostMapping("/write2DBAdCodeL3")
+    public HashMap<String, List<Cluster>> write2DBAdCodeL3(@RequestParam("adCode") String L3AdCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount, HttpServletResponse response) throws IOException {
+        //通过L3级Ad 获取到对应的所有L4级AD
+        List<Ad> l4Ads = adService.getL4AdByL3(L3AdCode);
+        //每个L4级别的AD，都查询到对应的cluster
+        HashMap<String, List<Cluster>> L4ClustersMap = new HashMap<>();
+        for (Ad l4Ad : l4Ads) {
+            List<Cluster> clusters = writeIntoDbByAdCode(l4Ad.getAdCode(), threshold, minAmount);
+            L4ClustersMap.put(l4Ad.getAdName() + l4Ad.getAdCode(),clusters);
+        }
+        return L4ClustersMap;
+    }
+
     private void shopColorGenerate(List<Cluster> clusters) {
         for (Cluster cluster : clusters) {
             Integer size = cluster.getSize();
-            if      (size>= 0 && size < 5){ cluster.setColor(1);}
-            else if (size>= 5 && size <10){ cluster.setColor(2);}
-            else if (size>=10 && size <15){ cluster.setColor(3);}
-            else if (size>=15 && size <20){ cluster.setColor(4);}
-            else if (size>=20 && size <30){ cluster.setColor(5);}
-            else if (size>=30 && size <40){ cluster.setColor(6);}
-            else                          { cluster.setColor(7);}
+            if      (size>= 0 && size < 5){ cluster.setColor("#9AFFBE=1");}
+            else if (size>= 5 && size <10){ cluster.setColor("#56E91C=2");}
+            else if (size>=10 && size <15){ cluster.setColor("#7E97FF=3");}
+            else if (size>=15 && size <20){ cluster.setColor("#5A78EF=4");}
+            else if (size>=20 && size <30){ cluster.setColor("#F6FB3C=5");}
+            else if (size>=30 && size <40){ cluster.setColor("#FFB625=6");}
+            else                          { cluster.setColor("#FF6666=7");}
         }
     }
 

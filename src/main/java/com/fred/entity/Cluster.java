@@ -39,7 +39,7 @@ public class Cluster {
      * 找到地图对应的颜色
      */
     @ExcelProperty("颜色")
-    private Integer color;
+    private String color;
 
     @ExcelProperty("图标")
     private String label;

@@ -44,7 +44,7 @@ public class GeoInfoGetController {
     }
 
     /**
-     * 1. 从高德获取数据
+     * 1.从高德获取数据
      * 2.写入数据库
      * 3.做聚合并
      */
@@ -117,7 +117,7 @@ public class GeoInfoGetController {
             Integer size = cluster.getSize();
             if      (size>= 0 && size < 5){ cluster.setColor("#9AFFBE=1");}
             else if (size>= 5 && size <10){ cluster.setColor("#56E91C=2");}
-            else if (size>=10 && size <15){ cluster.setColor("#7E97FF=3");}
+            else if (size>=10 && size <15){ cluster.setColor("#7AC8FF=3");}
             else if (size>=15 && size <20){ cluster.setColor("#5A78EF=4");}
             else if (size>=20 && size <30){ cluster.setColor("#F6FB3C=5");}
             else if (size>=30 && size <40){ cluster.setColor("#FFB625=6");}

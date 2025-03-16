@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fred.entity.Poi;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -17,6 +18,7 @@ import java.util.List;
 @Slf4j
 public class GeoUtil {
 
+    @SneakyThrows
     public static List<Poi> getAreaPoiList(String region) {
         List<Poi> allList = new ArrayList<>();
 
@@ -33,6 +35,7 @@ public class GeoUtil {
             if(page.getInteger("count") < 25){
                 break;
             }
+            Thread.sleep(400);
         }
         allList.forEach(item -> {
             log.info(JSONObject.toJSONString(item));

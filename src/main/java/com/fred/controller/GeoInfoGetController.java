@@ -80,9 +80,23 @@ public class GeoInfoGetController {
     }
 
     @PostMapping("/pointAggAdCodeL3")
-    public void pointAggAdCodeL3(@RequestParam("adCode") String L3AdCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount, HttpServletResponse response) throws IOException {
+    public HashMap<String, List<Cluster>> pointAggAdCodeL3(@RequestParam("adCode") String L3AdCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount, HttpServletResponse response) throws IOException {
         //通过L3级Ad 获取到对应的所有L4级AD
         List<Ad> l4Ads = adService.getL4AdByL3(L3AdCode);
+        //每个L4级别的AD，都查询到对应的cluster
+        HashMap<String, List<Cluster>> L4ClustersMap = new HashMap<>();
+        for (Ad l4Ad : l4Ads) {
+            List<Cluster> clusters = pointAggAdCode(l4Ad.getAdCode(), threshold, minAmount);
+            L4ClustersMap.put(l4Ad.getAdName() + l4Ad.getAdCode(),clusters);
+        }
+        return L4ClustersMap;
+    }
+
+    @PostMapping("/pointAggAdCodeL3Export")
+    public void pointAggAdCodeL3Export(@RequestParam("adCode") String L3AdCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount, HttpServletResponse response) throws IOException {
+        //通过L3级Ad 获取到对应的所有L4级AD
+        List<Ad> l4Ads = adService.getL4AdByL3(L3AdCode);
+
         //每个L4级别的AD，都查询到对应的cluster
         HashMap<String, List<Cluster>> L4ClustersMap = new HashMap<>();
         for (Ad l4Ad : l4Ads) {
@@ -163,7 +177,7 @@ public class GeoInfoGetController {
         ).collect(Collectors.toList());
 
         // 将点位划分到不同集合并计算出其中心点
-        List<Cluster> aggregate = PointAggUtil.aggregate(poiList,threshold);
+        List<Cluster> aggregate = PointAggUtil.aggregateWithVariableThreshold(poiList,threshold);
 
         for (Cluster cluster : aggregate) {
             List<Poi> poiListClus = cluster.getPoiList();

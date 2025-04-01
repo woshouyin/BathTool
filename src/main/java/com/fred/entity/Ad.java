@@ -15,6 +15,12 @@ public class Ad {
 
     private String adCode;
     private String adName;
+    /**
+     * 等级
+     * 2 省级
+     * 3 市级
+     * 4 区县
+     */
     private Integer level;
 
 

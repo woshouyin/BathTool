@@ -8,6 +8,7 @@ import com.fred.entity.Cluster;
 import com.fred.entity.Poi;
 import com.fred.service.intf.AdService;
 import com.fred.service.intf.PoiService;
+import com.fred.tool.MarketNameAnalyzer;
 import com.fred.tool.geo.GeoUtil;
 import com.fred.util.PointAggUtil;
 import com.fred.util.StreamUtils;
@@ -64,6 +65,11 @@ public class GeoInfoGetController {
     }
 
     @PostMapping("/pointAggAdCode")
+    public List<Cluster> pointAggAdCode(@RequestParam("adCode") String adCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount,String prefix) {
+        List<Poi> poiList = poiService.getPoiByAdCode(adCode);
+        return poiHandler(poiList,threshold,minAmount,prefix);
+    }
+
     public List<Cluster> pointAggAdCode(@RequestParam("adCode") String adCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount) {
         List<Poi> poiList = poiService.getPoiByAdCode(adCode);
         return poiHandler(poiList,threshold,minAmount);
@@ -85,8 +91,13 @@ public class GeoInfoGetController {
         List<Ad> l4Ads = adService.getL4AdByL3(L3AdCode);
         //每个L4级别的AD，都查询到对应的cluster
         HashMap<String, List<Cluster>> L4ClustersMap = new HashMap<>();
+        //获取L3AD对应的省/市前缀
+        String prefix = adService.getPrefixByL3AdCode(L3AdCode);
         for (Ad l4Ad : l4Ads) {
-            List<Cluster> clusters = pointAggAdCode(l4Ad.getAdCode(), threshold, minAmount);
+            //如果L4AD的名字中含有 市 县 区 自治县 则去除
+            String l4Name = l4Ad.getAdName().replaceAll("市|县|区|自治县", "");
+            String folderName = prefix + "/" + l4Name;
+            List<Cluster> clusters = pointAggAdCode(l4Ad.getAdCode(), threshold, minAmount,folderName);
             L4ClustersMap.put(l4Ad.getAdName() + l4Ad.getAdCode(),clusters);
         }
         return L4ClustersMap;
@@ -95,14 +106,7 @@ public class GeoInfoGetController {
     @PostMapping("/pointAggAdCodeL3Export")
     public void pointAggAdCodeL3Export(@RequestParam("adCode") String L3AdCode,@RequestParam("threshold") Double threshold,@RequestParam("minAmount") Integer minAmount, HttpServletResponse response) throws IOException {
         //通过L3级Ad 获取到对应的所有L4级AD
-        List<Ad> l4Ads = adService.getL4AdByL3(L3AdCode);
-
-        //每个L4级别的AD，都查询到对应的cluster
-        HashMap<String, List<Cluster>> L4ClustersMap = new HashMap<>();
-        for (Ad l4Ad : l4Ads) {
-            List<Cluster> clusters = pointAggAdCode(l4Ad.getAdCode(), threshold, minAmount);
-            L4ClustersMap.put(l4Ad.getAdName() + l4Ad.getAdCode(),clusters);
-        }
+        HashMap<String, List<Cluster>> L4ClustersMap = pointAggAdCodeL3(L3AdCode, threshold, minAmount, response);
         ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(),Cluster.class).build();
         L4ClustersMap.forEach((k,v) -> {
             shopNameWrite2Name(v);
@@ -142,18 +146,30 @@ public class GeoInfoGetController {
     private void shopNameWrite2Name(List<Cluster> clusters) {
         for (Cluster cluster : clusters) {
             StringBuilder shopNameList = new StringBuilder();
+            StringBuilder addressNameList = new StringBuilder();
             List<String> shopNames = cluster.getShopName();
+            List<String> addresses = cluster.getAddresses();
             for (String shopName : shopNames) {
                 shopNameList.append(shopName).append("\n");
             }
-            cluster.setName(shopNameList.toString());
+            for (String address : addresses) {
+                addressNameList.append(address).append("\n");
+            }
+            cluster.setShopNames(shopNameList.toString());
+            cluster.setAddress(addressNameList.toString());
         }
     }
 
     public List<Cluster> poiHandler(List<Poi> poiList,Double threshold){
         return poiHandler(poiList,threshold,5);
     }
+
+
     public List<Cluster> poiHandler(List<Poi> poiList,Double threshold,int minAmount){
+
+        return poiHandler(poiList,threshold,minAmount,"");
+    }
+    public List<Cluster> poiHandler(List<Poi> poiList,Double threshold,int minAmount,String prefix){
         poiList = poiList.stream().filter(
                 poi -> {
                     return poi.getName().contains("卫浴")
@@ -182,18 +198,24 @@ public class GeoInfoGetController {
         for (Cluster cluster : aggregate) {
             List<Poi> poiListClus = cluster.getPoiList();
             ArrayList<String> shopName = new ArrayList<>();
+            ArrayList<String> address = new ArrayList<>();
             poiListClus.forEach( poi -> {
                 shopName.add(poi.getName());
                 poi.setMarketCenter(cluster.getCenter());
+                address.add(poi.getAddress());
             });
             cluster.setShopName(shopName);
+            cluster.setAddresses(address);
             poiService.updateBatchById(poiListClus);
+            //TODO
+//            String name = MarketNameAnalyzer.analyzeRepresentative(cluster.getAddresses(), cluster.getShopName());
+//            cluster.setName(name);
         }
-
 
         aggregate.forEach(item -> item.setPoiList(null));
 
         List<Cluster> result = aggregate.stream().filter(item -> item.getSize() >= minAmount).sorted(Comparator.comparing(Cluster::getSize).reversed()).collect(Collectors.toList());
+        result.forEach(item -> item.setFolder(prefix));
         return result;
     }
 

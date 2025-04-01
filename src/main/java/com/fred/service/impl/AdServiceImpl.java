@@ -39,4 +39,30 @@ public class AdServiceImpl extends ServiceImpl<AdMapper, Ad> implements AdServic
         );
         return ads;
     }
+
+    @Override
+    public String getPrefixByL3AdCode(String l3AdCode) {
+        Ad l3 = this.baseMapper.selectOne(
+                new LambdaQueryWrapper<Ad>()
+                        .select(Ad::getAdCode, Ad::getAdName)
+                        .eq(Ad::getAdCode, l3AdCode)
+                        .eq(Ad::getLevel, 3).last("limit 1")
+        );
+        Ad l2 = this.baseMapper.selectOne(
+                new LambdaQueryWrapper<Ad>()
+                        .select(Ad::getAdCode, Ad::getAdName)
+                        .likeRight(Ad::getAdCode, l3AdCode.substring(0, 2))
+                        .eq(Ad::getLevel, 2).last("limit 1")
+        );
+
+        String l2AdName = l2.getAdName();
+        String l3AdName = l3.getAdName();
+        //如果L2中含有省市 自治区 特别行政区 则去除
+        l2AdName = l2AdName.replaceAll("省|市|自治区|特别行政区", "");
+
+        //如果L2中含有 市 自治州 地区 则去除
+        l3AdName = l3AdName.replaceAll("市|自治州|地区", "");
+        return l2AdName + "/"+ l3AdName;
+    }
+
 }

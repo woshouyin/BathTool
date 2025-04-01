@@ -16,7 +16,7 @@ public class Cluster {
     @ExcelIgnore
     private String center;
 
-    @ExcelProperty("各店铺名称")
+    @ExcelProperty("市场名称")
     private String name;
 
     /**
@@ -31,9 +31,8 @@ public class Cluster {
     @ExcelProperty("纬度")
     private String lat;
 
-
     @ExcelProperty("地址")
-    private String address;
+    private String MarketAddress;
 
     /**
      * 找到地图对应的颜色
@@ -55,5 +54,19 @@ public class Cluster {
 
     @ExcelIgnore
     private List<String> shopName;
+
+    @ExcelProperty("文件夹")
+    private String folder;
+
+    @ExcelIgnore
+    private List<String> addresses;
+
+
+    @ExcelProperty("店铺地址")
+    private String address;
+
+
+    @ExcelProperty("店铺名称")
+    private String shopNames;
 
 }
